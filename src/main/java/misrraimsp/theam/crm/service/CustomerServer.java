@@ -31,4 +31,11 @@ public class CustomerServer {
         customer.setSurname(surname);
         return customerRepository.save(customer);
     }
+
+    public Customer edit(Long id, String name, String surname) throws EntityNotFoundByIdException {
+        Customer customer = this.findById(id);
+        if (!name.isBlank()) customer.setName(name);
+        if (!surname.isBlank()) customer.setSurname(surname);
+        return customerRepository.save(customer);
+    }
 }

@@ -30,4 +30,12 @@ public class CustomerController {
 
         return customerServer.create(name, surname);
     }
+
+    @PutMapping("/customers")
+    public Customer editCustomer(@RequestParam Long id,
+                                 @RequestParam(defaultValue = "") String name,
+                                 @RequestParam(defaultValue = "") String surname) {
+
+        return customerServer.edit(id, name, surname);
+    }
 }
