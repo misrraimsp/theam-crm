@@ -3,6 +3,9 @@ package misrraimsp.theam.crm.data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.Optional;
 
@@ -12,8 +15,26 @@ public class AuditorAwareImplementation implements AuditorAware<String> {
 
     @Override
     public Optional<String> getCurrentAuditor() {
-
-        LOGGER.info("AuditorAware is working...");
-        return Optional.of("someone");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            if (authentication.getPrincipal() instanceof Jwt) {
+                String userId = ((Jwt) authentication.getPrincipal()).getClaim("sub");
+                LOGGER.info("user principal({}) of type Jwt", userId);
+                return Optional.of(userId);
+            } else {
+                LOGGER.info("user principal({}) of unexpected type {}", authentication.getPrincipal(), authentication.getPrincipal().getClass());
+                return Optional.of("unknown");
+            }
+        }
+        else {
+            if (authentication == null) {
+                LOGGER.info("authentication is null");
+            }
+            else {
+                LOGGER.info("authentication is not null but authentication.isAuthenticated is {}", authentication.isAuthenticated());
+            }
+            return Optional.of("unknown");
+        }
     }
+
 }

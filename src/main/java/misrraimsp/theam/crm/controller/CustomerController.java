@@ -1,11 +1,9 @@
 package misrraimsp.theam.crm.controller;
 
 import lombok.RequiredArgsConstructor;
-import misrraimsp.theam.crm.data.CustomerRepository;
 import misrraimsp.theam.crm.model.Customer;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import misrraimsp.theam.crm.service.CustomerServer;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,10 +12,22 @@ import java.util.List;
 @RequestMapping("/user")
 public class CustomerController {
 
-    private final CustomerRepository customerRepository;
+    private final CustomerServer customerServer;
 
     @GetMapping("/customers")
     public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+        return customerServer.findAll();
+    }
+
+    @GetMapping("/customers/{id}")
+    public Customer getCustomer(@PathVariable Long id) {
+        return customerServer.findById(id);
+    }
+
+    @PostMapping("/customers")
+    public Customer newCustomer(@RequestParam String name,
+                                @RequestParam String surname) {
+
+        return customerServer.create(name, surname);
     }
 }
