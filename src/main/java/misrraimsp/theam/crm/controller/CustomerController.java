@@ -31,11 +31,16 @@ public class CustomerController {
         return customerServer.create(name, surname);
     }
 
-    @PutMapping("/customers")
-    public Customer editCustomer(@RequestParam Long id,
+    @PutMapping("/customers/{id}")
+    public Customer editCustomer(@PathVariable Long id,
                                  @RequestParam(defaultValue = "") String name,
                                  @RequestParam(defaultValue = "") String surname) {
 
         return customerServer.edit(id, name, surname);
+    }
+
+    @DeleteMapping("/customers/{id}")
+    public void deleteCustomer(@PathVariable Long id) {
+        customerServer.delete(id);
     }
 }

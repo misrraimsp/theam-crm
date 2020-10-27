@@ -38,4 +38,8 @@ public class CustomerServer {
         if (!surname.isBlank()) customer.setSurname(surname);
         return customerRepository.save(customer);
     }
+
+    public void delete(Long id) throws EntityNotFoundByIdException {
+        customerRepository.delete(this.findById(id));
+    }
 }
