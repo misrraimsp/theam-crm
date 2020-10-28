@@ -1,12 +1,12 @@
 server:
-  port: 8081
+  port: 8081 #remember to externalize for prod
 
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/auth/realms/first-realm
+          issuer-uri: http://localhost:8080/auth/realms/first-realm #remember to externalize for prod
   h2:
     console:
       enabled: true

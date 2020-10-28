@@ -6,40 +6,40 @@ import misrraimsp.theam.crm.model.Customer;
 import misrraimsp.theam.crm.util.EntityNotFoundByIdException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
-public class CustomerServer {
+public class CustomerServer implements Server<Customer> {
 
     private final CustomerRepository customerRepository;
 
-    public List<Customer> findAll() {
-        return customerRepository.findAll();
+    @Override
+    public Customer[] findAll() {
+        return customerRepository.findAll().toArray(new Customer[0]);
     }
 
-    public Customer findById(Long id) throws EntityNotFoundByIdException {
+    @Override
+    public Customer findById(String id) throws EntityNotFoundByIdException {
         return customerRepository.findById(id).orElseThrow(() ->
                 new EntityNotFoundByIdException(id, Customer.class.getSimpleName())
         );
 
     }
 
-    public Customer create(String name, String surname) {
-        Customer customer = new Customer();
-        customer.setName(name);
-        customer.setSurname(surname);
+    @Override
+    public Customer create(Customer newCustomer) {
+        return customerRepository.save(newCustomer);
+    }
+
+    @Override
+    public Customer edit(Customer newCustomerInfo) throws EntityNotFoundByIdException {
+        Customer customer = this.findById(newCustomerInfo.getId());
+        if (newCustomerInfo.getName() != null) customer.setName(newCustomerInfo.getName());
+        if (newCustomerInfo.getSurname() != null) customer.setSurname(newCustomerInfo.getSurname());
         return customerRepository.save(customer);
     }
 
-    public Customer edit(Long id, String name, String surname) throws EntityNotFoundByIdException {
-        Customer customer = this.findById(id);
-        if (!name.isBlank()) customer.setName(name);
-        if (!surname.isBlank()) customer.setSurname(surname);
-        return customerRepository.save(customer);
-    }
-
-    public void delete(Long id) throws EntityNotFoundByIdException {
+    @Override
+    public void delete(String id) throws EntityNotFoundByIdException {
         customerRepository.delete(this.findById(id));
     }
 }

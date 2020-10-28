@@ -2,45 +2,38 @@ package misrraimsp.theam.crm.controller;
 
 import lombok.RequiredArgsConstructor;
 import misrraimsp.theam.crm.model.Customer;
-import misrraimsp.theam.crm.service.CustomerServer;
+import misrraimsp.theam.crm.service.Server;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
 public class CustomerController {
 
-    private final CustomerServer customerServer;
+    private final Server<Customer> customerServer;
 
     @GetMapping("/customers")
-    public List<Customer> getAllCustomers() {
+    public Customer[] getAllCustomers() {
         return customerServer.findAll();
     }
 
     @GetMapping("/customers/{id}")
-    public Customer getCustomer(@PathVariable Long id) {
+    public Customer getCustomer(@PathVariable String id) {
         return customerServer.findById(id);
     }
 
     @PostMapping("/customers")
-    public Customer newCustomer(@RequestParam String name,
-                                @RequestParam String surname) {
-
-        return customerServer.create(name, surname);
+    public Customer newCustomer(@RequestBody Customer customer) {
+        return customerServer.create(customer);
     }
 
-    @PutMapping("/customers/{id}")
-    public Customer editCustomer(@PathVariable Long id,
-                                 @RequestParam(defaultValue = "") String name,
-                                 @RequestParam(defaultValue = "") String surname) {
-
-        return customerServer.edit(id, name, surname);
+    @PutMapping("/customers")
+    public Customer editCustomer(@RequestBody Customer customer) {
+        return customerServer.edit(customer);
     }
 
     @DeleteMapping("/customers/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
+    public void deleteCustomer(@PathVariable String id) {
         customerServer.delete(id);
     }
 }

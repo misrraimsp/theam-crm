@@ -2,6 +2,7 @@ package misrraimsp.theam.crm.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -18,9 +19,10 @@ import java.time.LocalDateTime;
 public class BasicEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator="system-uuid")
+    @GenericGenerator(name="system-uuid", strategy = "uuid")
     @EqualsAndHashCode.Include // BasicEntity's equality is defined through their Id's equality
-    protected Long id;
+    protected String id;
 
     @CreatedBy
     @Column(updatable = false)
