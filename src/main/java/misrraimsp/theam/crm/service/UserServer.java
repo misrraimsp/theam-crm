@@ -1,9 +1,8 @@
 package misrraimsp.theam.crm.service;
 
 import lombok.RequiredArgsConstructor;
-import misrraimsp.theam.crm.util.EntityNotFoundByIdException;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
+import misrraimsp.theam.crm.model.dto.CredentialDTO;
+import misrraimsp.theam.crm.model.dto.UserDTO;
 import org.springframework.http.*;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,7 @@ import java.util.Collections;
 
 @RequiredArgsConstructor
 @Service
-public class UserServer implements Server<UserRepresentation>, OAuthClient {
+public class UserServer implements Server<UserDTO>, OAuthClient {
 
     private final RestTemplate restTemplate;
 
@@ -27,41 +26,39 @@ public class UserServer implements Server<UserRepresentation>, OAuthClient {
     }
 
     @Override
-    public UserRepresentation[] findAll() {
-
-
+    public UserDTO[] findAll() {
         return restTemplate.exchange(
                 serverUrl,
                 HttpMethod.GET,
                 new HttpEntity<>(this.buildHeaders()),
-                UserRepresentation[].class
+                UserDTO[].class
         ).getBody();
     }
 
     @Override
-    public UserRepresentation findById(String id) throws EntityNotFoundByIdException {
+    public UserDTO findById(String id) {
         return null;
     }
 
     @Override
-    public UserRepresentation create(UserRepresentation newUser) {
+    public UserDTO create(UserDTO newUser) {
         this.setDefaults(newUser);
 
         return restTemplate.exchange(
                 serverUrl,
                 HttpMethod.POST,
                 new HttpEntity<>(newUser,this.buildHeaders()),
-                UserRepresentation.class
+                UserDTO.class
         ).getBody();
     }
 
     @Override
-    public UserRepresentation edit(UserRepresentation object) throws EntityNotFoundByIdException {
+    public UserDTO edit(UserDTO object) {
         return null;
     }
 
     @Override
-    public void delete(String id) throws EntityNotFoundByIdException {
+    public void delete(String id) {
 
     }
 
@@ -72,11 +69,10 @@ public class UserServer implements Server<UserRepresentation>, OAuthClient {
         return httpHeaders;
     }
 
-    private void setDefaults(UserRepresentation u) {
+    private void setDefaults(UserDTO u) {
         if (u.getCredentials() == null || u.getCredentials().isEmpty()) {
-            CredentialRepresentation credential = new CredentialRepresentation();
+            CredentialDTO credential = new CredentialDTO();
             credential.setTemporary(true);
-            credential.setType(CredentialRepresentation.PASSWORD);
             credential.setValue(defaultPassword);
             u.setCredentials(Collections.singletonList(credential));
         }
