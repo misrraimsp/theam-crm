@@ -3,8 +3,11 @@ package misrraimsp.theam.crm.service;
 import lombok.RequiredArgsConstructor;
 import misrraimsp.theam.crm.data.CustomerRepository;
 import misrraimsp.theam.crm.model.Customer;
-import misrraimsp.theam.crm.util.EntityNotFoundByIdException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.nio.charset.Charset;
 
 @RequiredArgsConstructor
 @Service
@@ -18,9 +21,18 @@ public class CustomerServer implements Server<Customer> {
     }
 
     @Override
-    public Customer findById(String id) throws EntityNotFoundByIdException {
+    public Customer findById(String id) {
         return customerRepository.findById(id).orElseThrow(() ->
-                new EntityNotFoundByIdException(id, Customer.class.getSimpleName())
+                new HttpClientErrorException(
+                        HttpStatus.NOT_FOUND,
+                        "Not Found",
+                        String.format(
+                                "{\"errorMessage\": \"Entity of class %s not found by id=%s\"}",
+                                Customer.class.getSimpleName(),
+                                id
+                        ).getBytes(),
+                        Charset.defaultCharset()
+                )
         );
 
     }
@@ -31,7 +43,7 @@ public class CustomerServer implements Server<Customer> {
     }
 
     @Override
-    public Customer edit(Customer newCustomerInfo) throws EntityNotFoundByIdException {
+    public Customer edit(Customer newCustomerInfo) {
         Customer customer = this.findById(newCustomerInfo.getId());
         if (newCustomerInfo.getName() != null) customer.setName(newCustomerInfo.getName());
         if (newCustomerInfo.getSurname() != null) customer.setSurname(newCustomerInfo.getSurname());
@@ -39,7 +51,7 @@ public class CustomerServer implements Server<Customer> {
     }
 
     @Override
-    public void delete(String id) throws EntityNotFoundByIdException {
+    public void delete(String id) {
         customerRepository.delete(this.findById(id));
     }
 }
