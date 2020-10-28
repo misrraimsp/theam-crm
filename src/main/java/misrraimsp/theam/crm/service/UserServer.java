@@ -37,12 +37,18 @@ public class UserServer implements Server<UserDTO>, OAuthClient {
 
     @Override
     public UserDTO findById(String id) {
-        return null;
+        return restTemplate.exchange(
+                serverUrl + "/{id}",
+                HttpMethod.GET,
+                new HttpEntity<>(this.buildHeaders()),
+                UserDTO.class,
+                id
+        ).getBody();
     }
 
     @Override
     public UserDTO create(UserDTO newUser) {
-        this.setDefaults(newUser);
+        this.setDefaultsCredentials(newUser);
 
         return restTemplate.exchange(
                 serverUrl,
@@ -53,13 +59,25 @@ public class UserServer implements Server<UserDTO>, OAuthClient {
     }
 
     @Override
-    public UserDTO edit(UserDTO object) {
-        return null;
+    public UserDTO edit(UserDTO userDTOInfo) {
+        return restTemplate.exchange(
+                serverUrl + "/{id}",
+                HttpMethod.PUT,
+                new HttpEntity<>(userDTOInfo,this.buildHeaders()),
+                UserDTO.class,
+                userDTOInfo.getId()
+        ).getBody();
     }
 
     @Override
     public void delete(String id) {
-
+        restTemplate.exchange(
+                serverUrl + "/{id}",
+                HttpMethod.DELETE,
+                new HttpEntity<>(this.buildHeaders()),
+                UserDTO.class,
+                id
+        );
     }
 
     private HttpHeaders buildHeaders() {
@@ -69,14 +87,13 @@ public class UserServer implements Server<UserDTO>, OAuthClient {
         return httpHeaders;
     }
 
-    private void setDefaults(UserDTO u) {
+    private void setDefaultsCredentials(UserDTO u) {
         if (u.getCredentials() == null || u.getCredentials().isEmpty()) {
             CredentialDTO credential = new CredentialDTO();
             credential.setTemporary(true);
             credential.setValue(defaultPassword);
             u.setCredentials(Collections.singletonList(credential));
         }
-        u.setEnabled(true);
     }
 
 }

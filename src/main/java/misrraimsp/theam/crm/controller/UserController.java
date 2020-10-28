@@ -13,19 +13,42 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 public class UserController {
 
-    private final Server<UserDTO> userRepresentationServer;
+    private final Server<UserDTO> userDTOServer;
 
     @GetMapping("/users")
     public UserDTO[] getAllUsers(@AuthenticationPrincipal Jwt jwt) {
-        ((OAuthClient) userRepresentationServer).setAuthorizationToken(jwt);
-        return userRepresentationServer.findAll();
+        ((OAuthClient) userDTOServer).setAuthorizationToken(jwt);
+        return userDTOServer.findAll();
+    }
+
+    @GetMapping("/users/{id}")
+    public UserDTO getUser(@AuthenticationPrincipal Jwt jwt,
+                           @PathVariable String id) {
+        ((OAuthClient) userDTOServer).setAuthorizationToken(jwt);
+        return userDTOServer.findById(id);
     }
 
     @PostMapping("/users")
     public UserDTO newUser(@AuthenticationPrincipal Jwt jwt,
-                           @RequestBody UserDTO userRepresentation) {
+                           @RequestBody UserDTO userDTO) {
 
-        ((OAuthClient) userRepresentationServer).setAuthorizationToken(jwt);
-        return userRepresentationServer.create(userRepresentation);
+        ((OAuthClient) userDTOServer).setAuthorizationToken(jwt);
+        return userDTOServer.create(userDTO);
+    }
+
+    @PutMapping("/users")
+    public UserDTO editUser(@AuthenticationPrincipal Jwt jwt,
+                            @RequestBody UserDTO userDTO) {
+
+        ((OAuthClient) userDTOServer).setAuthorizationToken(jwt);
+        return userDTOServer.edit(userDTO);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@AuthenticationPrincipal Jwt jwt,
+                           @PathVariable String id) {
+
+        ((OAuthClient) userDTOServer).setAuthorizationToken(jwt);
+        userDTOServer.delete(id);
     }
 }
