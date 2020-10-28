@@ -1,36 +1,38 @@
 package misrraimsp.theam.crm.controller;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import misrraimsp.theam.crm.util.EntityNotFoundByIdException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 public class ExceptionControllerAdvice {
 
     @ResponseBody
     @ExceptionHandler(EntityNotFoundByIdException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Error entityNotFoundHandler(EntityNotFoundByIdException ex) {
-        return new Error("EntityNotFoundByIdException", ex.getMessage());
+    public ResponseEntity<?> entityNotFoundHandler(EntityNotFoundByIdException ex) {
+        Map<String,String> map = new HashMap<>();
+        map.put("errorMessage", ex.getMessage());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(map,httpHeaders,HttpStatus.NOT_FOUND);
     }
 
-    @Getter
-    @NoArgsConstructor
-    static class Error {
-
-        private String name;
-        private String message;
-
-        Error(String name, String message) {
-            this.name = name;
-            this.message = message;
-        }
+    @ResponseBody
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<?> httpClientErrorHandler(HttpClientErrorException ex) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(ex.getResponseBodyAsString(),httpHeaders,ex.getStatusCode());
     }
 
 }
