@@ -1,12 +1,18 @@
 server:
-  port: 8081 #remember to externalize for prod
+  port: ${RESOURCE_SERVER_PORT:8081}
 
 spring:
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080/auth/realms/first-realm #remember to externalize for prod
+          issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080/auth/realms/first-realm}
   h2:
     console:
       enabled: true
+
+crm:
+  oauth2:
+    users:
+      server-uri: ${USERS_SERVER_URI:http://localhost:8080/auth/admin/realms/first-realm/users}
+      default-pw: ${DEFAULT_PW:pass123}

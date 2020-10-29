@@ -3,6 +3,8 @@ package misrraimsp.theam.crm.service;
 import lombok.RequiredArgsConstructor;
 import misrraimsp.theam.crm.data.CustomerRepository;
 import misrraimsp.theam.crm.model.Customer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -12,6 +14,8 @@ import java.nio.charset.Charset;
 @RequiredArgsConstructor
 @Service
 public class CustomerServer implements Server<Customer> {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private final CustomerRepository customerRepository;
 
@@ -39,7 +43,9 @@ public class CustomerServer implements Server<Customer> {
 
     @Override
     public Customer create(Customer newCustomer) {
-        return customerRepository.save(newCustomer);
+        Customer createdCustomer = customerRepository.save(newCustomer);
+        LOGGER.info("Customer (id={}) created", createdCustomer.getId());
+        return createdCustomer;
     }
 
     @Override
@@ -47,6 +53,7 @@ public class CustomerServer implements Server<Customer> {
         Customer customer = this.findById(newCustomerInfo.getId());
         if (newCustomerInfo.getName() != null) customer.setName(newCustomerInfo.getName());
         if (newCustomerInfo.getSurname() != null) customer.setSurname(newCustomerInfo.getSurname());
+        LOGGER.info("Customer (id={}) updated", newCustomerInfo.getId());
         return customerRepository.save(customer);
     }
 

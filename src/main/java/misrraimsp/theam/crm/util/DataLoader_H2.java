@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DataLoader_H2 {
-    private static final Logger log = LoggerFactory.getLogger(DataLoader_H2.class);
+
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     @Bean
     CommandLineRunner initDatabase(CustomerRepository customerRepository) {
@@ -33,7 +34,7 @@ public class DataLoader_H2 {
             c3.setSurname("Suárez");
             customerRepository.save(c3);
 
-            customerRepository.findAll().forEach(customer -> log.info("Loaded " + customer.getName()));
+            customerRepository.findAll().forEach(customer -> LOGGER.info("Loaded " + customer.getName()));
 
 
 

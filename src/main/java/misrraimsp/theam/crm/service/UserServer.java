@@ -3,6 +3,7 @@ package misrraimsp.theam.crm.service;
 import lombok.RequiredArgsConstructor;
 import misrraimsp.theam.crm.model.dto.CredentialDTO;
 import misrraimsp.theam.crm.model.dto.UserDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,12 @@ public class UserServer implements Server<UserDTO>, OAuthClient {
     private final RestTemplate restTemplate;
 
     private Jwt jwt;
-    String serverUrl = "http://localhost:8080/auth/admin/realms/first-realm/users"; // #remember to externalize for prod
-    String defaultPassword = "pass123"; // #remember to externalize for prod
+
+    @Value("${crm.oauth2.users.server-uri}")
+    private String serverUrl;
+
+    @Value("${crm.oauth2.users.default-pw}")
+    private String defaultPassword;
 
     @Override
     public void setAuthorizationToken(Jwt jwt) {
