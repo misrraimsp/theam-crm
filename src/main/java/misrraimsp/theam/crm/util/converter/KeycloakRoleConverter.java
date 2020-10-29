@@ -1,4 +1,4 @@
-package misrraimsp.theam.crm.util;
+package misrraimsp.theam.crm.util.converter;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.core.GrantedAuthority;

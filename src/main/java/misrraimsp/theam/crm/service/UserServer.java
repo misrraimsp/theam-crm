@@ -13,11 +13,9 @@ import java.util.Collections;
 
 @RequiredArgsConstructor
 @Service
-public class UserServer implements Server<UserDTO>, OAuthClient {
+public class UserServer {
 
     private final RestTemplate restTemplate;
-
-    private Jwt jwt;
 
     @Value("${crm.oauth2.users.server-uri}")
     private String serverUrl;
@@ -25,67 +23,57 @@ public class UserServer implements Server<UserDTO>, OAuthClient {
     @Value("${crm.oauth2.users.default-pw}")
     private String defaultPassword;
 
-    @Override
-    public void setAuthorizationToken(Jwt jwt) {
-        this.jwt = jwt;
-    }
-
-    @Override
-    public UserDTO[] findAll() {
+    public UserDTO[] findAll(Jwt jwt) {
         return restTemplate.exchange(
                 serverUrl,
                 HttpMethod.GET,
-                new HttpEntity<>(this.buildHeaders()),
+                new HttpEntity<>(this.buildHeaders(jwt)),
                 UserDTO[].class
         ).getBody();
     }
 
-    @Override
-    public UserDTO findById(String id) {
+    public UserDTO findById(String id, Jwt jwt) {
         return restTemplate.exchange(
                 serverUrl + "/{id}",
                 HttpMethod.GET,
-                new HttpEntity<>(this.buildHeaders()),
+                new HttpEntity<>(this.buildHeaders(jwt)),
                 UserDTO.class,
                 id
         ).getBody();
     }
 
-    @Override
-    public UserDTO create(UserDTO newUser) {
+    public UserDTO create(UserDTO newUser, Jwt jwt) {
         this.setDefaultsCredentials(newUser);
 
         return restTemplate.exchange(
                 serverUrl,
                 HttpMethod.POST,
-                new HttpEntity<>(newUser,this.buildHeaders()),
+                new HttpEntity<>(newUser,this.buildHeaders(jwt)),
                 UserDTO.class
         ).getBody();
     }
 
-    @Override
-    public UserDTO edit(UserDTO userDTOInfo) {
+    public UserDTO edit(UserDTO userDTOInfo, Jwt jwt) {
         return restTemplate.exchange(
                 serverUrl + "/{id}",
                 HttpMethod.PUT,
-                new HttpEntity<>(userDTOInfo,this.buildHeaders()),
+                new HttpEntity<>(userDTOInfo,this.buildHeaders(jwt)),
                 UserDTO.class,
                 userDTOInfo.getId()
         ).getBody();
     }
 
-    @Override
-    public void delete(String id) {
+    public void delete(String id, Jwt jwt) {
         restTemplate.exchange(
                 serverUrl + "/{id}",
                 HttpMethod.DELETE,
-                new HttpEntity<>(this.buildHeaders()),
+                new HttpEntity<>(this.buildHeaders(jwt)),
                 UserDTO.class,
                 id
         );
     }
 
-    private HttpHeaders buildHeaders() {
+    private HttpHeaders buildHeaders(Jwt jwt) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(jwt.getTokenValue());
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);

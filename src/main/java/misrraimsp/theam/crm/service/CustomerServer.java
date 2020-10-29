@@ -3,6 +3,7 @@ package misrraimsp.theam.crm.service;
 import lombok.RequiredArgsConstructor;
 import misrraimsp.theam.crm.data.CustomerRepository;
 import misrraimsp.theam.crm.model.Customer;
+import misrraimsp.theam.crm.model.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,18 +14,17 @@ import java.nio.charset.Charset;
 
 @RequiredArgsConstructor
 @Service
-public class CustomerServer implements Server<Customer> {
+public class CustomerServer {
 
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
     private final CustomerRepository customerRepository;
+    private final ImageServer imageServer;
 
-    @Override
     public Customer[] findAll() {
         return customerRepository.findAll().toArray(new Customer[0]);
     }
 
-    @Override
     public Customer findById(String id) {
         return customerRepository.findById(id).orElseThrow(() ->
                 new HttpClientErrorException(
@@ -41,14 +41,12 @@ public class CustomerServer implements Server<Customer> {
 
     }
 
-    @Override
     public Customer create(Customer newCustomer) {
         Customer createdCustomer = customerRepository.save(newCustomer);
         LOGGER.info("Customer (id={}) created", createdCustomer.getId());
         return createdCustomer;
     }
 
-    @Override
     public Customer edit(Customer newCustomerInfo) {
         Customer customer = this.findById(newCustomerInfo.getId());
         if (newCustomerInfo.getName() != null) customer.setName(newCustomerInfo.getName());
@@ -57,8 +55,30 @@ public class CustomerServer implements Server<Customer> {
         return customerRepository.save(customer);
     }
 
-    @Override
     public void delete(String id) {
-        customerRepository.delete(this.findById(id));
+        Customer customer = this.findById(id);
+        String imageId = customer.getImageId();
+        customerRepository.delete(customer);
+        imageServer.delete(imageId);
+        LOGGER.info("Customer (id={}) deleted", id);
+
+    }
+
+    public Image getCustomerImage(String customerId) {
+        Customer customer = this.findById(customerId);
+        return imageServer.findById(customer.getImageId());
+    }
+
+    public Customer updateCustomerImage(String customerId, Image imageInfo) {
+        Customer customer = this.findById(customerId);
+        String prevImageId = customer.getImageId();
+        Image newImage = imageServer.create(imageInfo);
+        customer.setImage(newImage);
+        Customer editedCustomer = this.edit(customer);
+        if (prevImageId != null) {
+            imageServer.delete(prevImageId);
+        }
+        LOGGER.info("Customer (id={}) image (id={}) updated", customerId, newImage.getId());
+        return editedCustomer;
     }
 }

@@ -1,6 +1,6 @@
 package misrraimsp.theam.crm.config;
 
-import misrraimsp.theam.crm.util.KeycloakRoleConverter;
+import misrraimsp.theam.crm.util.converter.KeycloakRoleConverter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;

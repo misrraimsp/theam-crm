@@ -10,8 +10,11 @@ spring:
   h2:
     console:
       enabled: true
+  jpa:
+    show-sql: true
 
 crm:
+  host-address: http://localhost:8081
   oauth2:
     users:
       server-uri: ${USERS_SERVER_URI:http://localhost:8080/auth/admin/realms/first-realm/users}
