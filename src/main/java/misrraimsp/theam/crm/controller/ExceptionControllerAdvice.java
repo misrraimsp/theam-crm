@@ -4,8 +4,10 @@ package misrraimsp.theam.crm.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,4 +27,16 @@ public class ExceptionControllerAdvice {
         return new ResponseEntity<>(ex.getResponseBodyAsString(),httpHeaders,ex.getStatusCode());
     }
 
+    @ResponseBody
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> methodArgumentNotValidHandler(MethodArgumentNotValidException ex) {
+        LOGGER.info(ex.getMessage());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(
+                "{\"errorMessage\": " + "\"" + ex.getMessage() + "\"}",
+                httpHeaders,
+                HttpStatus.BAD_REQUEST
+        );
+    }
 }

@@ -5,6 +5,8 @@ import misrraimsp.theam.crm.model.Customer;
 import misrraimsp.theam.crm.service.Server;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -23,7 +25,7 @@ public class CustomerController {
     }
 
     @PostMapping("/customers")
-    public Customer newCustomer(@RequestBody Customer customer) {
+    public Customer newCustomer(@RequestBody @Valid Customer customer) {
         return customerServer.create(customer);
     }
 
