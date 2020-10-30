@@ -1,0 +1,33 @@
+version: '3.1'
+services:
+  resource-server:
+    image: theam-crm-resource-server
+    container_name: resource-server
+    environment:
+      - JWT_ISSUER_URI=http://keycloak:8081/auth/realms/first-realm
+      - USERS_SERVER_URI=http://keycloak:8081/auth/admin/realms/first-realm/users
+    ports:
+      - "8080:8080"
+    depends_on:
+      - dbpostgresql
+      - keycloak
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    container_name: keycloak
+    volumes:
+      - ./realm-config.json:/tmp/realm-config.json
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/tmp/realm-config.json
+    ports:
+      - "8081:8080"
+  dbpostgresql:
+    image: postgres
+    container_name: dbpostgresql
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=theam

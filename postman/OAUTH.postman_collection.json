@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "e35deba6-b4b3-4cfe-8546-f2b52babbd4e",
+		"name": "OAUTH",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Exchange Authorization Code for AT",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "first-client",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "34bd35b4-3480-4fde-a988-1ac8934e61e6",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "56c0e939-be57-417d-b69c-29d7b1317934.b3f85746-a318-42f4-899b-77fd59af42b6.95329ef2-d2ff-450c-9347-691581618356",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:8082/callback",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid profile",
+							"type": "text"
+						}
+					],
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/realms/first-realm/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"first-realm",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Authorization Code",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/auth/realms/first-realm/protocol/openid-connect/auth?client_id=first-client&response_type=code&scope=openid profile&redirect_uri=http://localhost:8082/callback&state=wtfmnnn",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"first-realm",
+						"protocol",
+						"openid-connect",
+						"auth"
+					],
+					"query": [
+						{
+							"key": "client_id",
+							"value": "first-client"
+						},
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "scope",
+							"value": "openid profile"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "http://localhost:8082/callback"
+						},
+						{
+							"key": "state",
+							"value": "wtfmnnn"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh AT",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "first-client",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "34bd35b4-3480-4fde-a988-1ac8934e61e6",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIyZDEyMzY1MS0zOWMxLTQwYTYtOGZiZC1hY2U1YjU3MDliNjMifQ.eyJleHAiOjE2MDM4MjY5MjYsImlhdCI6MTYwMzgyNTEyNiwianRpIjoiYjY0MDc1NGItMGFhMi00MDJlLTgzNTgtNjdlZmNkZjJlZjMxIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL2ZpcnN0LXJlYWxtIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2F1dGgvcmVhbG1zL2ZpcnN0LXJlYWxtIiwic3ViIjoiNjNkODI5OGEtNDc0OS00NzVkLTk0M2QtZmM0YjhmMGU0YWZjIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6ImZpcnN0LWNsaWVudCIsInNlc3Npb25fc3RhdGUiOiI1NjI2ZTg2My02MWNkLTQzNzUtOGQ1Ni1iYTA5NzVlYzYyZDUiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIn0.yyXDY4WYDaL2aZGBdNTywG6HyLlmDGuYIWTEYHoWErs",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8080/auth/realms/first-realm/protocol/openid-connect/token",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"auth",
+						"realms",
+						"first-realm",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

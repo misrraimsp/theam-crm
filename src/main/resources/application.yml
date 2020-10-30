@@ -1,6 +1,57 @@
-server:
-  port: ${RESOURCE_SERVER_PORT:8081}
+spring:
+  profiles:
+    active:
+      #dev-postgresql
+      dev-h2
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080/auth/realms/first-realm}
+  jpa:
+    show-sql: false
 
+crm:
+  oauth2:
+    users:
+      server-uri: ${USERS_SERVER_URI:http://localhost:8080/auth/admin/realms/first-realm/users}
+      default-pw: ${DEFAULT_PW:3xp3di3nt3XD}
+server:
+  port: 8081
+---
+
+spring:
+  profiles: dev-h2
+  h2:
+    console:
+      enabled: true
+logging:
+  level:
+    misrraimsp:
+      theam:
+        crm: TRACE
+    org:
+      springframework:
+        web: TRACE
+
+---
+
+spring:
+  profiles: dev-postgresql
+  datasource:
+    url: jdbc:postgresql://dbpostgresql:5432/theam
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
+    initialization-mode: always
+    schema: classpath:sql/schema.sql
+    data: classpath:sql/data.sql
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
 logging:
   level:
     misrraimsp:
@@ -9,22 +60,3 @@ logging:
     org:
       springframework:
         web: DEBUG
-
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${JWT_ISSUER_URI:http://localhost:8080/auth/realms/first-realm}
-  h2:
-    console:
-      enabled: true
-  jpa:
-    show-sql: true
-
-crm:
-  host-address: http://localhost:8081
-  oauth2:
-    users:
-      server-uri: ${USERS_SERVER_URI:http://localhost:8080/auth/admin/realms/first-realm/users}
-      default-pw: ${DEFAULT_PW:pass123}

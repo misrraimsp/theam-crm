@@ -1,0 +1,2 @@
+
+INSERT INTO customer (id,created_by,created_date,last_modified_by,last_modified_date,name,surname,image_id) VALUES ('ff8081817579e5ce017579e5d16b0000','unknown',timestamp '2020-04-05 12:45:38','unknown',timestamp '2020-04-05 12:45:38','Marco','Polo',null), ('ff8081817579e5ce017579e5d16b0001','unknown',timestamp '2020-04-05 12:47:38','unknown',timestamp '2020-04-05 12:47:38','Peter','Parker',null);
