@@ -19,19 +19,19 @@ public class AuditorAwareImplementation implements AuditorAware<String> {
         if (authentication != null && authentication.isAuthenticated()) {
             if (authentication.getPrincipal() instanceof Jwt) {
                 String userId = ((Jwt) authentication.getPrincipal()).getClaim("sub");
-                LOGGER.info("user principal({}) of type Jwt", userId);
+                LOGGER.debug("user principal({}) of type Jwt", userId);
                 return Optional.of(userId);
             } else {
-                LOGGER.info("user principal({}) of unexpected type {}", authentication.getPrincipal(), authentication.getPrincipal().getClass());
+                LOGGER.warn("user principal({}) of unexpected type {}", authentication.getPrincipal(), authentication.getPrincipal().getClass());
                 return Optional.of("unknown");
             }
         }
         else {
             if (authentication == null) {
-                LOGGER.info("authentication is null");
+                LOGGER.debug("authentication is null");
             }
             else {
-                LOGGER.info("authentication is not null but authentication.isAuthenticated is {}", authentication.isAuthenticated());
+                LOGGER.warn("authentication is not null but authentication.isAuthenticated is {}", authentication.isAuthenticated());
             }
             return Optional.of("unknown");
         }

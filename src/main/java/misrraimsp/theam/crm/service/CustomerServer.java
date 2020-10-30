@@ -43,7 +43,7 @@ public class CustomerServer {
 
     public Customer create(Customer newCustomer) {
         Customer createdCustomer = customerRepository.save(newCustomer);
-        LOGGER.info("Customer (id={}) created", createdCustomer.getId());
+        LOGGER.debug("Customer (id={}) created", createdCustomer.getId());
         return createdCustomer;
     }
 
@@ -51,7 +51,7 @@ public class CustomerServer {
         Customer customer = this.findById(newCustomerInfo.getId());
         if (newCustomerInfo.getName() != null) customer.setName(newCustomerInfo.getName());
         if (newCustomerInfo.getSurname() != null) customer.setSurname(newCustomerInfo.getSurname());
-        LOGGER.info("Customer (id={}) updated", newCustomerInfo.getId());
+        LOGGER.debug("Customer (id={}) updated", newCustomerInfo.getId());
         return customerRepository.save(customer);
     }
 
@@ -60,7 +60,7 @@ public class CustomerServer {
         String imageId = customer.getImageId();
         customerRepository.delete(customer);
         imageServer.delete(imageId);
-        LOGGER.info("Customer (id={}) deleted", id);
+        LOGGER.debug("Customer (id={}) deleted", id);
 
     }
 
@@ -78,7 +78,7 @@ public class CustomerServer {
         if (prevImageId != null) {
             imageServer.delete(prevImageId);
         }
-        LOGGER.info("Customer (id={}) image (id={}) updated", customerId, newImage.getId());
+        LOGGER.debug("Customer (id={}) image (id={}) updated", customerId, newImage.getId());
         return editedCustomer;
     }
 }

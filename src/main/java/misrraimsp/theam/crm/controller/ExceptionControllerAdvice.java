@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,7 +25,7 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<?> httpClientErrorHandler(HttpClientErrorException ex) {
-        LOGGER.info(ex.getMessage());
+        LOGGER.debug(ex.getMessage());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(
@@ -37,11 +38,11 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> methodArgumentNotValidHandler(MethodArgumentNotValidException ex) {
-        LOGGER.info(ex.getMessage());
+        LOGGER.debug(ex.getMessage());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(
-                "{\"errorMessage\": " + "\"" + ex.getMessage() + "\"}",
+                this.buildErrorMessage(ex.getMessage()),
                 httpHeaders,
                 HttpStatus.BAD_REQUEST
         );
@@ -50,11 +51,24 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     @ExceptionHandler(BadImageException.class)
     public ResponseEntity<?> badImageExceptionHandler(BadImageException ex) {
-        LOGGER.info(ex.getMessage());
+        LOGGER.debug(ex.getMessage());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(
-                "{\"errorMessage\": " + "\"" + ex.getMessage() + "\"}",
+                this.buildErrorMessage(ex.getMessage()),
+                httpHeaders,
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ResponseBody
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<?> transactionSystemExceptionHandler(TransactionSystemException ex) {
+        LOGGER.debug(ex.getMessage());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(
+                buildErrorMessage(ex.getMostSpecificCause().getMessage()),
                 httpHeaders,
                 HttpStatus.BAD_REQUEST
         );
@@ -63,13 +77,22 @@ public class ExceptionControllerAdvice {
     @ResponseBody
     @ExceptionHandler(IOException.class)
     public ResponseEntity<?> IOExceptionHandler(IOException ex) {
-        LOGGER.info(ex.getMessage());
+        LOGGER.debug(ex.getMessage());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         return new ResponseEntity<>(
-                "{\"errorMessage\": " + "\"" + ex.getMessage() + "\"}",
+                this.buildErrorMessage(ex.getMessage()),
                 httpHeaders,
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
+    }
+
+    private String buildErrorMessage(String text) {
+        return "{\"errorMessage\": " +
+                "\"" +
+                text
+                    .replaceAll("\\s", " ")
+                    .replaceAll("\"", "'") +
+                "\"}";
     }
 }

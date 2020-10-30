@@ -1,6 +1,15 @@
 server:
   port: ${RESOURCE_SERVER_PORT:8081}
 
+logging:
+  level:
+    misrraimsp:
+      theam:
+        crm: DEBUG
+    org:
+      springframework:
+        web: DEBUG
+
 spring:
   security:
     oauth2:

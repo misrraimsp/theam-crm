@@ -2,41 +2,21 @@ package misrraimsp.theam.crm.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import misrraimsp.theam.crm.util.ValidationParameters;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-public class BasicEntity {
+public class BasicEntity implements ValidationParameters {
 
     @Id
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     @EqualsAndHashCode.Include // BasicEntity's equality is defined through their Id's equality
     protected String id;
-
-    @CreatedBy
-    @Column(updatable = false)
-    protected String createdBy;
-
-    @CreatedDate
-    @Column(updatable = false)
-    protected LocalDateTime createdDate;
-
-    @LastModifiedBy
-    protected String lastModifiedBy;
-
-    @LastModifiedDate
-    protected LocalDateTime lastModifiedDate;
-
 }
-

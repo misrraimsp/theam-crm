@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -12,10 +14,13 @@ import javax.persistence.Lob;
 public class Image extends BasicEntity {
 
     @Lob //h2
+    @Size(message = "Too large image", max = IMAGE_MAX_BYTES)
     private byte[] data;
 
+    @Pattern(regexp = IMAGE_NAME)
     private String name;
 
+    @Pattern(regexp = IMAGE_MIME_TYPE)
     private String mimeType;
 
 }

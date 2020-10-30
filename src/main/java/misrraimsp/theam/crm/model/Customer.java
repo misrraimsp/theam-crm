@@ -4,19 +4,24 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Customer extends BasicEntity {
+public class Customer extends AuditableEntity {
 
     @NotBlank(message = "Customer's Name needs not to be empty")
+    @Pattern(regexp = TEXT_BASIC)
     private String name;
 
     @NotBlank(message = "Customer's Surname needs not to be empty")
+    @Pattern(regexp = TEXT_BASIC)
     private String surname;
 
     @OneToOne
+    @Valid
     private Image image;
 
     public String getImageUrl() {

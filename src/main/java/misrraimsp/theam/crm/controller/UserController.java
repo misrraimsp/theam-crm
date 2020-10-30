@@ -7,6 +7,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/admin")
@@ -28,14 +30,14 @@ public class UserController {
 
     @PostMapping("/users")
     public UserDTO newUser(@AuthenticationPrincipal Jwt jwt,
-                           @RequestBody UserDTO userDTO) {
+                           @RequestBody @Valid UserDTO userDTO) {
 
         return userServer.create(userDTO, jwt);
     }
 
     @PutMapping("/users")
     public UserDTO editUser(@AuthenticationPrincipal Jwt jwt,
-                            @RequestBody UserDTO userDTO) {
+                            @RequestBody @Valid UserDTO userDTO) {
 
         return userServer.edit(userDTO, jwt);
     }

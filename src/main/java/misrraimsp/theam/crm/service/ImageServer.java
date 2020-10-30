@@ -36,13 +36,13 @@ public class ImageServer {
 
     public Image create(Image image) {
         Image persistedImage = imageRepository.save(image);
-        LOGGER.info("Image (id={}) persisted", persistedImage.getId());
+        LOGGER.debug("Image (id={}) persisted", persistedImage.getId());
         return persistedImage;
     }
 
     public void delete(String imageId) {
         imageRepository.delete(this.findById(imageId));
-        LOGGER.info("Image (id={}) deleted", imageId);
+        LOGGER.debug("Image (id={}) deleted", imageId);
     }
 
 }

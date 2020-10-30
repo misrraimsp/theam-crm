@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +32,7 @@ public class CustomerController {
     }
 
     @PostMapping("/customers")
-    public Customer newCustomer(@RequestBody @Valid Customer customer) {
+    public Customer newCustomer(@RequestBody Customer customer) {
         return customerServer.create(customer);
     }
 

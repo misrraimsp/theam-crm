@@ -34,7 +34,7 @@ public class DataLoader_H2 {
             c3.setSurname("Suárez");
             customerRepository.save(c3);
 
-            customerRepository.findAll().forEach(customer -> LOGGER.info("Loaded " + customer.getName()));
+            customerRepository.findAll().forEach(customer -> LOGGER.debug("Loaded " + customer.getName()));
 
 
 
