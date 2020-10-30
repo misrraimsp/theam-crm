@@ -7,9 +7,9 @@ This project shows a simple REST API to manage customer data. It is built using 
  1. [Download Keycloak zip file](https://www.keycloak.org/downloads), unzip it with file name <_name_> at <_path_> (this project used keycloak-11.0.2) and then run `<path>/<name>/bin/standalone.sh`. That command will launch Keycloak server on port 8080, so that you can head `http://localhost:8080/auth`
     and create an admin account by filling the form that will be shown the first time you reach the server.
     
- 2. Import the realm configuration file __realm-config.json__. This file defines a _realm_ with a single _client_ and two _realm-roles_ (USER and ADMIN).
- 3. Create a user with ADMIN role following [this](https://www.keycloak.org/docs/latest/getting_started/index.html#creating-a-user).
- 4. After Keycloak started successfully, you can start the Spring Boot application in a separate terminal via `mvn package spring-boot:run`, from the project directory. This will make available at port 8081 the Resource Server (this REST API).
+ 2. Import the realm configuration file [__realm-config.json__](https://github.com/misrraimsp/theam-crm/blob/master/realm-config.json). This file defines a _realm_ with a single _client_ and two _realm-roles_ (USER and ADMIN).
+ 3. Create a user with ADMIN role [following this](https://www.keycloak.org/docs/latest/getting_started/index.html#creating-a-user).
+ 4. After Keycloak started successfully, you can start the Spring Boot application in a separate terminal via `mvn package spring-boot:run`, from the project directory. This will make available at port 8081 the Resource Server.
 
 ### Consuming the Resource Server API
 
@@ -40,5 +40,5 @@ The developed API is secured via OAuth 2.0 protocol, so that every request must 
     
  5. Examples of all these HTTP requests, both to the Resource Server and the Authorization Server, can be found in the [Postman](https://www.postman.com/) collections provided with the project:
     
-    __CRM-THEAM.postman_collection.json__
-    __OAUTH.postman_collection.json__
+    - [__CRM-THEAM.postman_collection.json__](https://github.com/misrraimsp/theam-crm/blob/master/postman/CRM-THEAM.postman_collection.json)
+    - [__OAUTH.postman_collection.json__](https://github.com/misrraimsp/theam-crm/blob/master/postman/OAUTH.postman_collection.json)
